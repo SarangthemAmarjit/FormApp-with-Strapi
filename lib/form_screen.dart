@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:form1/modal.dart';
 import 'package:form1/page2.dart';
+import 'package:form1/serivce/service_api.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'display.dart';
 import 'personal.dart';
 import 'package:marquee/marquee.dart';
 import 'doc1.dart';
@@ -21,61 +23,62 @@ class FormScreen extends StatefulWidget {
   State<FormScreen> createState() => _FormScreenState();
 }
 
-Future<ApplicationForm> submitData(
-  String post,
-  String username,
-  String email,
-  String password,
-  String phonenumber,
-  String address,
-  String qualification,
-  String gen,
-) async {
-  var response = await http.post(
-      Uri.parse('https://herokunew123.herokuapp.com/api/application-forms'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json'
-      },
-      body: jsonEncode(<String, Map>{
-        "data": {
-          "post": post,
-          "name": username,
-          "email": email,
-          "password": password,
-          "number": phonenumber,
-          "address": address,
-          "qualification": qualification,
-          "gender": gen
-        }
-      }));
-  var data = response.body;
-  print(data);
+// Future<ApplicationForm> submitData(
+//   String post,
+//   String username,
+//   String email,
+//   String password,
+//   String phonenumber,
+//   String address,
+//   String qualification,
+//   String gen,
+// ) async {
+//   final body = {
+//     "data": {
+//       "post": post,
+//       "name": username,
+//       "email": email,
+//       "password": password,
+//       "number": phonenumber,
+//       "address": address,
+//       "qualification": qualification,
+//       "gender": gen
+//     }
+//   };
+//   var response = await http.post(
+//       Uri.parse('https://herokunew123.herokuapp.com/api/application-forms'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//       },
+//       body: jsonEncode(body));
+//   var data = response.body;
+//   print(data);
 
-  if (response.statusCode == 201) {
-    String respondsString = response.body;
-    ApplicationFormFromJson(respondsString);
-    // If the server did return a 201 CREATED response,
-    // then parse the JSON.
+//   if (response.statusCode == 200) {
+//     print('Successfully Post');
+//     return ApplicationForm.fromJson(json.decode(response.body));
 
-  } else {
-    // If the server did not return a 201 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create ApplicationForm Form.');
-  }
-  throw Exception();
-}
+//     // If the server did return a 201 CREATED response,
+//     // then parse the JSON.
+
+//   } else {
+//     // If the server did not return a 201 CREATED response,
+//     // then throw an exception.
+//     throw Exception('Failed to create ApplicationForm Form.');
+//   }
+//   throw Exception();
+// }
 
 class _FormScreenState extends State<FormScreen> {
   ApplicationForm? _applicationForm;
-  String post = '';
-  String username = '';
-  String email = '';
-  String password = '';
-  String phonenumber = '';
-  String address = '';
-  String qualification = '';
-  String gen = '';
+  String post1 = '';
+  String name1 = '';
+  String email1 = '';
+  String password1 = '';
+  String number1 = '';
+  String address1 = '';
+  String qualification1 = '';
+  String gender1 = '';
 
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -83,7 +86,7 @@ class _FormScreenState extends State<FormScreen> {
   final _numberController = TextEditingController();
   final _addressController = TextEditingController();
 
-  gender _character = gender.male;
+  genderok _character = genderok.male;
   List<String> listitem = [
     'App Developer',
     'Website developer',
@@ -343,34 +346,63 @@ class _FormScreenState extends State<FormScreen> {
         RadioListTile(
             toggleable: true,
             title: Text("Male"),
-            value: gender.male,
+            value: genderok.male,
             groupValue: _character,
             onChanged: (value) {
               setState(() {
-                _character = value as gender;
+                _character = value as genderok;
               });
             }),
         RadioListTile(
             title: Text("Female"),
-            value: gender.female,
+            value: genderok.female,
             groupValue: _character,
             onChanged: (value) {
               setState(() {
-                _character = value as gender;
+                _character = value as genderok;
               });
             }),
         RadioListTile(
             title: Text("Other"),
-            value: gender.other,
+            value: genderok.other,
             groupValue: _character,
             onChanged: (value) {
               setState(() {
-                _character = value as gender;
+                _character = value as genderok;
               });
             }),
       ],
     );
   }
+
+  // postData(
+  //   String post,
+  //   String name,
+  //   String email,
+  //   String password,
+  //   String number,
+  //   String address,
+  //   String qualification,
+  //   String gender,
+  // ) async {
+  //   var response = await http.post(
+  //       Uri.parse('https://herokunew123.herokuapp.com/api/application-forms'),
+  //       body: {
+  //         "data": {
+  //           "attributes": {
+  //             "post": post,
+  //             "name": name,
+  //             "email": email,
+  //             "password": password,
+  //             "number": number,
+  //             "address": address,
+  //             "qualification": qualification,
+  //             "gender": gender
+  //           }
+  //         }
+  //       });
+  //   print(response.body);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -478,53 +510,73 @@ class _FormScreenState extends State<FormScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                            onPressed: () async {
-                              String post = itemvalue!;
-                              String username = _usernameController.text;
-                              String email = _emailController.text;
-                              String password = _passwordController.text;
-                              String phonenumber = _numberController.text;
-                              String address = _addressController.text;
-                              String qualification = itemvalue2!;
-                              String gen = _character.name;
-                              ApplicationForm finaldata = await submitData(
-                                  post,
-                                  username,
-                                  email,
-                                  password,
-                                  phonenumber,
-                                  address,
-                                  qualification,
-                                  gen);
-                              setState(() {
-                                _applicationForm = finaldata;
-                              }); // if (_formkey.currentState!.validate())
-                              //   {
-                              //     post = itemvalue!,
-                              //     username = _usernameController.text,
-                              //     email = _emailController.text,
-                              //     password = _passwordController.text,
-                              //     phonenumber = _numberController.text,
-                              //     address = _addressController.text,
-                              //     qualification = itemvalue2!,
-                              //     gen = _character.name,
-                              //     Navigator.push(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //             builder: (context) => page2(
-                              //                 post: post,
-                              //                 username: username,
-                              //                 email: email,
-                              //                 password: password,
-                              //                 phonenumber: phonenumber,
-                              //                 address: address,
-                              //                 qualification: qualification,
-                              //                 gen: gen)))
-                              //   }
-                              // else
-                              //   _formkey.currentState!.save(),
-                              // print("Saved Succesfully")
-                            },
+                            onPressed: (() {
+                              var data = ApplicationForm.fromJson({
+                                name1: _usernameController.text,
+                                email1: _emailController.text,
+                                password1: _passwordController.text,
+                                number1: _numberController.text,
+                                address1: _addressController.text,
+                                gender1: _character.name,
+                                post1: itemvalue!,
+                                qualification1: itemvalue2!,
+                              });
+                              ServiceApi().save(data);
+
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          DisplayUsers(
+                                              post: post1,
+                                              username: name1,
+                                              email: email1,
+                                              password: password1,
+                                              phonenumber: number1,
+                                              address: address1,
+                                              qualification: qualification1,
+                                              gen: gender1)),
+                                  (Route<dynamic> route) => false);
+                              // name1 = _usernameController.text;
+                              // email1 = _emailController.text;
+                              // password1 = _passwordController.text;
+                              // number1 = _numberController.text;
+                              // address1 = _addressController.text;
+                              // gender1 = _character.name;
+                              // post1 = itemvalue.toString();
+                              // qualification1 = itemvalue2.toString();
+
+                              // submitData(post1, name1, email1, password1,
+                              //     number1, address1, qualification1, gender1);
+                            }),
+
+                            // setState(
+                            //     () {}); // if (_formkey.currentState!.validate())
+                            //   {
+                            //     post = itemvalue!,
+                            //     username = _usernameController.text,
+                            //     email = _emailController.text,
+                            //     password = _passwordController.text,
+                            //     phonenumber = _numberController.text,
+                            //     address = _addressController.text,
+                            //     qualification = itemvalue2!,
+                            //     gen = _character.name,
+                            //     Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: (context) => page2(
+                            //                 post: post,
+                            //                 username: username,
+                            //                 email: email,
+                            //                 password: password,
+                            //                 phonenumber: phonenumber,
+                            //                 address: address,
+                            //                 qualification: qualification,
+                            //                 gen: gen)))
+                            //   }
+                            // else
+                            //   _formkey.currentState!.save(),
+                            // print("Saved Succesfully")
+
                             child: Text(
                               'Submit',
                               style:

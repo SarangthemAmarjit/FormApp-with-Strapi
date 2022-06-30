@@ -1,1 +1,1 @@
-enum gender { male, female, other }
+enum genderok { male, female, other }

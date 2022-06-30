@@ -11,47 +11,46 @@ String ApplicationFormToJson(ApplicationForm data) =>
     json.encode(data.toJson());
 
 class ApplicationForm {
-  ApplicationForm(
-      {required this.post,
-      required this.username,
-      required this.email,
-      required this.password,
-      required this.phonenumber,
-      required this.address,
-      required this.qualification,
-      required this.gen,
-      required this.id});
-  int id;
+  ApplicationForm({
+    required this.post,
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.number,
+    required this.address,
+    required this.qualification,
+    required this.gender,
+  });
+
   String post;
-  String username;
+  String name;
   String email;
   String password;
-  String phonenumber;
+  String number;
   String address;
   String qualification;
-  String gen;
+  String gender;
 
   factory ApplicationForm.fromJson(Map<String, dynamic> json) =>
       ApplicationForm(
         post: json["post"],
-        username: json["username"],
+        name: json["name"],
         email: json["email"],
         password: json["password"],
-        phonenumber: json["phonenumber"],
+        number: json["number"],
         address: json["address"],
         qualification: json["qualification"],
-        gen: json["gen"],
-        id: json["id"],
+        gender: json["gender"],
       );
 
   Map<String, dynamic> toJson() => {
         "post": post,
-        "username": username,
+        "name": name,
         "email": email,
         "password": password,
-        "phonenumber": phonenumber,
+        "number": number,
         "address": address,
         "qualification": qualification,
-        "gen": gen,
+        "gender": gender,
       };
 }

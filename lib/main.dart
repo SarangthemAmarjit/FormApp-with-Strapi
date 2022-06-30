@@ -3,6 +3,7 @@ import 'package:form1/form_screen.dart';
 import 'home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
